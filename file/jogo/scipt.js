@@ -1,4 +1,55 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const background = document.querySelector(".background");
+    const totalNumbers = 20;
+
+    function createNumber() {
+        let num = Math.floor(Math.random() * 8) + 1;
+        let numberElement = document.createElement("div");
+        numberElement.classList.add("number");
+        numberElement.textContent = num;
+
+        let posX = Math.random() * 100;
+        let posY = Math.random() * 100;
+        let duration = 3 + Math.random() * 5;
+
+        numberElement.style.left = `${posX}vw`;
+        numberElement.style.top = `${posY}vh`;
+        numberElement.style.animationDuration = `${duration}s`;
+
+        background.appendChild(numberElement);
+
+        numberElement.addEventListener("animationiteration", () => {
+            numberElement.style.left = Math.random() * 100 + "vw";
+            numberElement.style.top = Math.random() * 100 + "vh";
+            numberElement.textContent = Math.floor(Math.random() * 9) + 1;
+        });
+    }
+
+    for (let i = 0; i < totalNumbers; i++) {
+        createNumber();
+    }
+
+    const numbersInBackground = [];
+    const numberElements = document.querySelectorAll('.number');
+
+    numberElements.forEach((element) => {
+        numbersInBackground.push({
+            num: parseInt(element.textContent),
+            element: element
+        });
+    });
+
+    function alterarCorNumero(fundoNumero) {
+        numbersInBackground.forEach((item) => {
+            if (item.num === fundoNumero) {
+                item.element.classList.add("destacado");
+                setTimeout(() => {
+                    item.element.classList.remove("destacado");
+                }, 1000);
+            }
+        });
+    }
+
     const tabuleiro = document.getElementById('tabuleiro');
     const comecarBtn = document.getElementById('comecarBtn');
     const ajudaBtn = document.getElementById('ajudaBtn');
@@ -12,7 +63,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let vazio = { linha: 2, coluna: 2 };
 
-    // Função para contar inversões no puzzle
     function contarInversoes() {
         let arr = [].concat(...puzzle);
         let inversoes = 0;
@@ -27,7 +77,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return inversoes;
     }
 
-    // Função para embaralhar as peças
     function embaralhar() {
         let numbers = [];
         for (let i = 0; i < 9; i++) {
@@ -54,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Função para verificar se o jogador ganhou
     function verificarGanhou() {
         let correto = [
             [1, 2, 3],
@@ -72,7 +120,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return true;
     }
 
-    // Função para criar o tabuleiro
     function criarTabuleiro() {
         tabuleiro.innerHTML = '';
 
@@ -87,41 +134,17 @@ document.addEventListener("DOMContentLoaded", function () {
                     celula.setAttribute("data-linha", linha);
                     celula.setAttribute("data-coluna", coluna);
 
-                    // Lógica de arrasto para o mouse
                     celula.addEventListener('dragstart', (e) => {
                         e.dataTransfer.setData("text", `${linha},${coluna}`);
                         e.target.style.opacity = '0.5';
+                        const numeroTabuleiro = parseInt(e.target.textContent);
+                        alterarCorNumero(numeroTabuleiro);
                     });
 
                     celula.addEventListener('dragend', (e) => {
                         e.target.style.opacity = '1';
                     });
 
-                    // Lógica de arrasto para toque no celular
-                    celula.addEventListener('touchstart', (e) => {
-                        e.preventDefault();
-                        const touch = e.touches[0];
-                        const pos = touch.target.getBoundingClientRect();
-                        e.target.style.opacity = '0.5';
-
-                        celula.addEventListener('touchmove', (moveEvent) => {
-                            moveEvent.preventDefault();
-                            const touchMove = moveEvent.touches[0];
-                            const deltaX = touchMove.pageX - touch.pageX;
-                            const deltaY = touchMove.pageY - touch.pageY;
-
-                            // Movimenta o elemento conforme o toque
-                            celula.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-                        });
-
-                        celula.addEventListener('touchend', (endEvent) => {
-                            endEvent.preventDefault();
-                            // Resetando a posição da peça
-                            celula.style.transform = 'none';
-                        });
-                    });
-
-                    // Permitir que as peças se movam
                     celula.addEventListener('click', (e) => {
                         const numeroTabuleiro = parseInt(e.target.textContent);
                         alterarCorNumero(numeroTabuleiro);
@@ -151,7 +174,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Função para mover a peça
     function moverPeça(linhaOrig, colunaOrig, linhaDestino, colunaDestino) {
         const distanciaLinha = Math.abs(linhaDestino - linhaOrig);
         const distanciaColuna = Math.abs(colunaDestino - colunaOrig);
@@ -169,14 +191,22 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Função para começar o jogo
+    function resolverJogo() {
+        puzzle = [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 0]
+        ];
+        vazio = { linha: 2, coluna: 2 };
+        criarTabuleiro();
+    }
+
     function comecarJogo() {
         embaralhar();
         criarTabuleiro();
         mensagemParabens.style.display = 'none';
     }
 
-    // Função de dica para o jogador
     function fornecerDica() {
         let melhorMovimento = encontrarMelhorMovimento();
         if (melhorMovimento) {
@@ -190,7 +220,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Função para encontrar o melhor movimento
     function encontrarMelhorMovimento() {
         for (let linha = 0; linha < 3; linha++) {
             for (let coluna = 0; coluna < 3; coluna++) {
@@ -205,13 +234,10 @@ document.addEventListener("DOMContentLoaded", function () {
         return null;
     }
 
-    // Configuração inicial
     criarTabuleiro();
 
-    // Botão de começar o jogo
     comecarBtn.textContent = 'Começar';
     comecarBtn.addEventListener('click', comecarJogo);
 
-    // Botão de ajuda
     ajudaBtn.addEventListener('click', fornecerDica);
 });
