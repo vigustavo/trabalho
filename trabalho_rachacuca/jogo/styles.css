@@ -1,0 +1,154 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #1f2d47;
+    overflow: hidden;
+    position: relative;
+}
+
+.background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: #1f2d47; 
+}
+
+.number {
+    position: absolute;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #FFFFFF;
+    animation: cair 6s ease-in-out infinite;
+}
+
+@keyframes cair {
+    0% {
+        top: -10vh;
+        opacity: 1;
+    }
+    100% {
+        top: 100vh;
+        opacity: 0;
+    }
+}
+
+.container {
+    position: absolute;
+    width: 620px;
+    height: 620px;
+    background-color: rgba(13, 27, 42, 0.8);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    position: relative;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #4CAF50;
+}
+
+.quadrado {
+    width: 320px;
+    height: 320px;
+    border: 5px solid #1D2B64;
+    border-radius: 20px;
+    box-shadow: 30px 30px 45px rgba(0, 0, 0, 0.3);
+    background-image: url(imggame/quadrado-removebg-preview.png);
+    background-size: 205% 399%;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tabuleiro {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 5px;
+}
+
+.peça {
+    width: 100px;
+    height: 100px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    background-image: url(imggame/quadro12-removebg-preview.png);
+    background-size: 230px 450px;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.peça.vazia {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    cursor: default;
+}
+
+button {
+    margin-top: 20px;
+    padding: 18px 35px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #6ec1e4;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #4da8c9;
+    transform: scale(1.05);
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(110, 193, 228, 0.4);
+}
+
+.parabens {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #4CAF50;
+    display: none;
+}
+
+.number.destacado {
+    color: #000;
+    font-size: 3.5rem;
+    font-weight: bold;
+}
