@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const totalNumbers = 20;
 
     function createNumber() {
-        let num = Math.floor(Math.random() * 900) + 1;
+        let num = Math.floor(Math.random() * 8) + 1;
         let numberElement = document.createElement("div");
         numberElement.classList.add("number");
         numberElement.textContent = num;
