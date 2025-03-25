@@ -134,6 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     celula.setAttribute("data-linha", linha);
                     celula.setAttribute("data-coluna", coluna);
 
+                    // Lógica de arrasto para mouse
                     celula.addEventListener('dragstart', (e) => {
                         e.dataTransfer.setData("text", `${linha},${coluna}`);
                         e.target.style.opacity = '0.5';
@@ -143,6 +144,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     celula.addEventListener('dragend', (e) => {
                         e.target.style.opacity = '1';
+                    });
+
+                    // Lógica de arrasto para toque no celular
+                    celula.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        const touch = e.touches[0];
+                        const pos = touch.target.getBoundingClientRect();
+                        e.target.style.opacity = '0.5';
+                        const numeroTabuleiro = parseInt(e.target.textContent);
+                        alterarCorNumero(numeroTabuleiro);
+
+                        celula.addEventListener('touchmove', (moveEvent) => {
+                            moveEvent.preventDefault();
+                            const touchMove = moveEvent.touches[0];
+                            const deltaX = touchMove.pageX - touch.pageX;
+                            const deltaY = touchMove.pageY - touch.pageY;
+
+                            // Movimenta o elemento conforme o toque
+                            celula.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                        });
+
+                        celula.addEventListener('touchend', (endEvent) => {
+                            endEvent.preventDefault();
+                            // Aqui você pode adaptar a lógica para arrastar as peças
+                            celula.style.transform = 'none';
+                        });
                     });
 
                     celula.addEventListener('click', (e) => {
